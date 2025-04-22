@@ -23,6 +23,10 @@ export const RESPONSE = {
     code: "205",
     message: "",
   },
+  ACCESS_DENIED: {
+    code: "206",
+    message: "access-denied",
+  },
 
   UNKNOWN_ERR: {
     code: "500",

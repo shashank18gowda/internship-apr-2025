@@ -3,9 +3,10 @@ import studentModel from "../../models/studentModel.js";
 import { RESPONSE } from "../../config/global.js";
 import { STATE } from "../../config/constants.js";
 import { send, setErrMsg } from "../../helper/responseHelper.js";
+import { authenticate } from "../../middlewares/authenticate.js";
 const router = Router();
 
-export default router.get("/", async (req, res) => {
+export default router.get("/", authenticate, async (req, res) => {
   try {
     // if (!name || name == undefined) {
     //   return send(res, setErrMsg(RESPONSE.MANDATORY, "name"));
@@ -26,7 +27,10 @@ export default router.get("/", async (req, res) => {
     //aggregate method
     let studentData = await studentModel.aggregate([
       {
-        $match: { isactive: STATE.ACTIVE },
+        $match: {
+          isactive: STATE.ACTIVE,
+          $expr: { $eq: ["$teacher_id", { $toObjectId: req.user.id }] },
+        },
       },
       {
         $project: {

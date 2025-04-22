@@ -6,9 +6,10 @@ const router = Router();
 
 import multer from "multer";
 import image from "../../middlewares/uploads.js";
+import { authenticate } from "../../middlewares/authenticate.js";
 const upload = image.single("avatar");
 
-export default router.post("/", async (req, res) => {
+export default router.post("/", authenticate, async (req, res) => {
   try {
     upload(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
@@ -61,6 +62,7 @@ export default router.post("/", async (req, res) => {
         email: email,
         rollno: rollno,
         image: req.file.filename,
+        teacher_id: req.user.id,
       });
 
       return send(res, RESPONSE.SUCESSS);
